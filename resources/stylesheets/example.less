@@ -1,0 +1,137 @@
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+body, html { font-size: 100%; padding: 0; margin: 0;}
+
+@documentation_blue:  #47a3da;
+
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before, .clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
+.clearfix{
+	zoom:1;
+}
+
+body {
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    color: @documentation_blue;
+}
+
+a {
+	color: #ccc;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	color: #000;
+}
+
+header{
+	border-bottom: 1px solid @documentation_blue;
+}
+
+button{
+	font-size:120%;
+	padding: .5em;
+}
+
+.container{
+	margin:auto;
+	max-width: 40em;
+	h1{
+		small{
+			font-size:50%;
+			button{
+				margin: 0 .5em;
+				cursor: pointer;
+				float: right;
+			}
+		}
+	}
+	form{
+		.clearfix;
+		& > article section{
+			margin: 0.5em;
+			padding: 1em 0;
+			line-height: 2em;
+			min-height: 2em;
+			clear:both;
+			margin-top: 0;
+			padding-top: 0;
+			label{
+				display: block;
+				float:	left;
+				width: 30%;
+				min-height: 2em;
+			}
+			.label-data-container{
+				display: block;
+				float:	left;
+				width: 68%;
+				padding: .5em;
+				min-height: 2em;
+				
+				margin-top: 0;
+				padding-top: 0;
+			}
+
+			.label-data-style{
+				display: block;
+				float:	left;
+				width: 100%;
+				color:#333;
+				background: #ececec;
+				border: 1px solid @documentation_blue;
+				padding: .5em;
+				min-height: 2em;
+				border-radius: .25em;
+
+				// margin-top: 0;
+				// padding-top: 0;
+			}
+			&:last-child{
+				border-bottom: 1px solid @documentation_blue;
+				text-align: center;
+				margin-bottom: 8em;
+			}
+		}
+		input[type=submit]{
+			width: 80%;
+			text-align: center;
+			margin: auto;
+			border: 1px solid @documentation_blue;
+			color: #fff;
+			background: @documentation_blue;
+			border-radius: .25em;
+			font-size: 1.2em;
+			padding: .25em;
+		}
+	}
+	.pull-left.width50{
+		border-right: 1px solid @documentation_blue;
+	}
+	pre#pushie-test-result{
+		color:#333;
+		background: #ececec;
+		border: 1px solid @documentation_blue;
+		padding: .5em;
+		min-height: 10em;
+		max-height: 35em;
+		overflow: auto;
+	}
+	.fixed-response-container{
+		padding-left: 1em;
+		position: fixed;
+		display: block;
+		width: 35%;
+		margin-top: 0;
+		padding-top: 0;
+	}
+
+	.pull-left{
+		float:left;
+	}
+	.width50{
+		width:50%;
+		// padding: 2em;
+	}
+}
