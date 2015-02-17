@@ -5,7 +5,7 @@ var state,
 	urlhistory,
 	examples,
 	output,
-	template = '<p>URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong></p>',
+	template = 'URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>',
 	data = { // imagine these are ajax requests :)
 		first: {
 			name: 'Remy',

@@ -6,7 +6,8 @@
  */
 
 'use strict';
-var path = require('path');
+var path = require('path'),
+	sample_middleware = require('./resources/js/sample_middleware');
 
 module.exports = function (grunt) {
 	grunt.initConfig({
@@ -100,14 +101,11 @@ module.exports = function (grunt) {
 					debug: true,
 					// open: true,
 					keepalive: true,
-					middleware: [
-						function myMiddleware(req, res, next) {
-							console.log('req._parsedUrl', req._parsedUrl);
-							// res.end(JSON.stringify(req, false, 2));
-							res.end('Hello, world!');
-							next();
-						}
-					],
+					middleware: function (connect, options, middlewares) {
+						// inject a custom middleware into the array of default middlewares
+						middlewares.unshift(sample_middleware.getdata);
+						return middlewares;
+					}
 				}
 			}
 		},
