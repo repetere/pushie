@@ -1,4 +1,4 @@
-<html>
+<html class="ts">
 
 <head>
   <title>Pushie</title>
@@ -11,130 +11,51 @@
 </head>
 
 <body>
-  <div class="container">
-    <header class="clearfix">
-      <h1>CommonJS/Browserified ajax form submission</h1>
-      <p>Pushie submits form data via AJAX. Pushie supports JSONP, GET, POST, DELETE and multipart/form-data file Uploads without the baggage of a full framework.</p>
-      </p>
-      <h3>Full API <a href="http://yawetse.github.io/pushie/api/html">documentation</a>
-      </h3>
-    </header>
-    <div class="pushie-test">
-      <div class="pull-left width50">
-        <form id="duckduckgo-pushie-test" name="duckduckgo-pushie-test" action="http://api.duckduckgo.com/" class="pushie" method="get">
-          <h2>GET JSONP Test</h2>
-          <article class="right-border">
-            <section>
-              <label for="q">Search</label>
-              <div class="label-data-container">
-                <input class="label-data-style" type="text" value="The New York Times" name="q" id="q" />
-                <input type="hidden" name="format" value="json">
-              </div>
-            </section>
-            <section>
-              <input type="submit" name="testpushiesubmit" value="Search DuckDuckGo" />
-            </section>
-          </article>
-        </form>
-        <form id="html-pushie-test" name="html-pushie-test" action="./htmltest.html" class="pushie" method="get">
-          <h2>GET HTML Test</h2>
-          <article class="right-border">
-            <section>
-              <input type="submit" name="gethtml" value="Get HTML" />
-            </section>
-          </article>
-        </form>
-        <form id="pushie-test" name="pushie-test" action="" class="pushie" method="get">
-          <h2>GET JSON Test</h2>
-          <article class="right-border">
-            <section>
-              <label for="username">Username</label>
-              <div class="label-data-container">
-                <input class="label-data-style autoFormSubmit" type="text" value="@user" name="username" id="username" />
-              </div>
-            </section>
-            <section>
-              <label for="location">Location</label>
-              <div class="label-data-container">
-                <select class="label-data-style autoFormSubmit" id="location" name="location">
-                  <option value="newyork">New York</option>
-                  <option value="losangeles">Los Angeles</option>
-                  <option value="Miami">Miami</option>
-                  <option value="Chicago">Chicago</option>
-                </select>
-              </div>
-            </section>
-            <section>
-              <label for="tastes">tastes</label>
-              <div class="label-data-container">
-                <input type="checkbox" name="tastes" value="music" class="autoFormSubmit" checked>music</br>
-                <input type="checkbox" name="tastes" value="movies" class="autoFormSubmit">movies</br>
-                <input type="checkbox" name="tastes" value="art" class="autoFormSubmit">art</br>
-                <input type="checkbox" name="tastes" value="food" class="autoFormSubmit" checked>food
-              </div>
-            </section>
-            <section>
-              <label for="sex">Gender</label>
-              <div class="label-data-container">
-                <input type="radio" name="sex" value="male" class="autoFormSubmit" checked>Male
-                <br>
-                <input type="radio" name="sex" class="autoFormSubmit" value="female">Female
-              </div>
-            </section>
-            <!--             <section>
-              <label for="image">Image</label>
-              <div class="label-data-container">
-                <input type="file" id="image" class="label-data-style autoFormSubmit" name="image" multiple="multiple">
-              </div>
-            </section> -->
-            <section>
-              <label>Profile</label>
-              <div class="label-data-container">
-                <textarea class="label-data-style autoFormSubmit" name="description" id="description"></textarea>
-              </div>
-            </section>
-            <section>
-              <input type="submit" name="testpushiesubmit" value="AJAX Get" />
-            </section>
-          </article>
-        </form>
-
-        <form id="upload-pushie-test" name="upload-pushie-test" action="postresult.json" class="pushie" method="post" enctype="multipart/form-data">
-          <h2>POST JSON: Upload media test</h2>
-          <article class="right-border">
-            <section>
-              <label for="title">title</label>
-              <div class="label-data-container">
-                <input class="label-data-style autoFormSubmit" type="text" value="" name="title" id="title" />
-              </div>
-            </section>
-            <section>
-              <label for="image">Image</label>
-              <div class="label-data-container">
-                <input type="file" id="image" class="label-data-style pushie-file autoFormSubmit" name="image" multiple="multiple">
-              </div>
-            </section>
-            <section>
-              <label>description</label>
-              <div class="label-data-container">
-                <textarea class="label-data-style" name="description" id="description"></textarea>
-              </div>
-            </section>
-            <section>
-              <input type="submit" name="testpushiesubmit" value="AJAX Post Upload" />
-            </section>
-          </article>
-
-        </form>
-      </div>
-      <div class="pull-left width50">
-        <div class="fixed-response-container">
-          <h2>Form Response Data</h2>
-          <pre id="pushie-test-result"></pre>
+  <header class="ts-text-container">
+    <h1>Pushie - window push state object</h1>
+    <!-- <p>Pushie submits form data via AJAX. Pushie supports JSONP, GET, POST, DELETE and multipart/form-data file Uploads without the baggage of a full framework.</p> -->
+    </p>
+    <p>Full API <a href="http://yawetse.github.io/pushie/api/html">documentation</a>
+    </p>
+    <hr>
+  </header>
+  <main class="ts-text-container">
+    <section class="ts-text-container">
+      <div class="ts-row ts-no-heading-margin ">
+        <div class="ts-col-span6">
+          <h6 id="status">HTML5 History API not supported</h6>
+          <p>
+            <em>Last event fired:
+              <span id="lastevent">(none)</span>
+            </em>
+          </p>
+          <!-- <p>To test the History API, click through the urls below. Note that none of these urls point to
+            <em>real</em> pages. JavaScript will intercept these clicks, load data and the browser address bar will
+            <em>appear</em> to change - but this is the History API in action!</p>
+          <p>Use the back and forward buttons in your browser to navigate the history.</p> -->
+          <ul id="examples">
+            <li><a href="/history/first">first</a>
+            </li>
+            <li><a href="/history/second">second</a>
+            </li>
+            <li><a href="/history/third">third</a>
+            </li>
+            <li><a href="/history/fourth">fourth</a>
+            </li>
+          </ul>
+          <p>
+            <small>Note: since these urls aren't real, refreshing the page will land on an invalid url.</small>
+          </p>
+        </div>
+        <div class="ts-col-span6">
+          <h6>Response Data</h6>
+          <pre id="output" class="ts-border-accent-color ts-padding-lg ts-border-solid-micro">
+          </pre>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
+  <!--
   <script>
   (function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;
@@ -151,6 +72,7 @@
   ga('create', 'UA-52892914-6', 'auto');
   ga('send', 'pageview');
   </script>
+  -->
 </body>
 
 </html>

@@ -100,12 +100,14 @@ module.exports = function (grunt) {
 					debug: true,
 					// open: true,
 					keepalive: true,
-					// middleware: [
-					// 	function myMiddleware(req, res, next) {
-					// 		res.end('Hello, world!');
-					// 		next();
-					// 	}
-					// ],
+					middleware: [
+						function myMiddleware(req, res, next) {
+							console.log('req._parsedUrl', req._parsedUrl);
+							// res.end(JSON.stringify(req, false, 2));
+							res.end('Hello, world!');
+							next();
+						}
+					],
 				}
 			}
 		},
@@ -122,6 +124,7 @@ module.exports = function (grunt) {
 				options: {
 					sourceMap: true,
 					yuicompress: true,
+					sourceMapFileInline: true,
 					compress: true
 				},
 				files: {
