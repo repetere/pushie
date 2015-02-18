@@ -70,6 +70,14 @@
       </div>
     </section>
   </main>
+  <script>
+  window.initialdata = {
+    title: '<% if(typeof title==="string" ){%> <%-title%> <%}%>',
+    url: '<% if(typeof url==="string" ){%> <%-url%> <%}%>',
+    name: '<% if(typeof name==="string" ){%> <%-name%> <%}%>',
+    location: '<% if(typeof location==="string" ){%> <%-location%> <%}%>',
+  }
+  </script>
   <!--
   <script>
   (function(i, s, o, g, r, a, m) {

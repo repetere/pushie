@@ -8,18 +8,22 @@ var async = require('async'),
 	INDEX_ejs_template_cache,
 	pagedata = { // imagine these are ajax requests :)
 		first: {
+			title: 'first',
 			name: 'Remy',
 			location: 'Brighton, UK'
 		},
 		second: {
+			title: 'second',
 			name: 'John',
 			location: 'San Francisco, USA'
 		},
 		third: {
+			title: 'third',
 			name: 'Jeff',
 			location: 'Vancover, Canada'
 		},
 		fourth: {
+			title: 'fourth',
 			name: 'Simon',
 			location: 'London, UK'
 		}

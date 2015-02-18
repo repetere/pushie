@@ -1,29 +1,12 @@
 'use strict';
 
-var state,
+var request = require('superagent'),
+	state,
 	lastevent,
 	urlhistory,
 	examples,
 	output,
-	template = 'URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>',
-	data = { // imagine these are ajax requests :)
-		first: {
-			name: 'Remy',
-			location: 'Brighton, UK'
-		},
-		second: {
-			name: 'John',
-			location: 'San Francisco, USA'
-		},
-		third: {
-			name: 'Jeff',
-			location: 'Vancover, Canada'
-		},
-		fourth: {
-			name: 'Simon',
-			location: 'London, UK'
-		}
-	};
+	template = 'title: <strong>{title}</strong>, URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>';
 
 var reportEvent = function (event) {
 	console.log('event', event);
@@ -37,18 +20,25 @@ var reportData = function (data) {
 };
 
 var linkClick = function (event) {
-	var title;
+	var title = event.target.innerHTML;
+	output.innerHTML = 'loading...';
 	event.preventDefault();
-	title = event.target.innerHTML;
-	// console.log('title', title);
-	data[title].url = event.target.getAttribute('href'); // slightly hacky (the setting), using getAttribute to keep it short
-	history.pushState(data[title], title, event.target.href);
-	reportData(data[title]);
+	request
+		.get(event.target.getAttribute('href'))
+		.set('Accept', 'application/json')
+		.query({
+			format: 'json'
+		})
+		.end(function (error, res) {
+			var statedata = JSON.parse(res.text);
+			window.history.pushState(statedata, statedata.title, event.target.href);
+			reportData(statedata);
+		});
 	return false;
 };
 
 var initEvents = function () {
-	if (typeof history.pushState === 'undefined') {
+	if (typeof window.history.pushState === 'undefined') {
 		state.className = 'fail';
 	}
 	else {
@@ -61,9 +51,21 @@ var initEvents = function () {
 	}
 
 	window.addEventListener('popstate', function (event) {
-		var data = event.state;
+		// var data = event.state;
 		reportEvent(event);
 		reportData(event.state || {
+			title: 'unknown',
+			url: 'unknown',
+			name: 'undefined',
+			location: 'undefined'
+		});
+	});
+
+	window.addEventListener('replacestate', function (event) {
+		// var data = event.state;
+		reportEvent(event);
+		reportData(event.state || {
+			title: 'unknown',
 			url: 'unknown',
 			name: 'undefined',
 			location: 'undefined'
@@ -90,6 +92,8 @@ var initEvents = function () {
 	window.addEventListener('pagehide', function (event) {
 		reportEvent(event);
 	});
+
+	window.history.replaceState(window.initialdata, window.initialdata.title, window.initialdata.url);
 };
 
 window.addEventListener('load', function () {
