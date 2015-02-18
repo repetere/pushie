@@ -1,6 +1,8 @@
 'use strict';
 
 var request = require('superagent'),
+	Pushie = require('../../index'),
+	Pushie1,
 	state,
 	lastevent,
 	urlhistory,
@@ -13,14 +15,13 @@ var reportEvent = function (event) {
 	lastevent.innerHTML = event.type;
 };
 
-var reportData = function (data) {
+var statecallback = function (data) {
 	output.innerHTML = template.replace(/(:?\{(.*?)\})/g, function (a, b, c) {
 		return data[c];
 	});
 };
 
 var linkClick = function (event) {
-	var title = event.target.innerHTML;
 	output.innerHTML = 'loading...';
 	event.preventDefault();
 	request
@@ -31,8 +32,11 @@ var linkClick = function (event) {
 		})
 		.end(function (error, res) {
 			var statedata = JSON.parse(res.text);
-			window.history.pushState(statedata, statedata.title, event.target.href);
-			reportData(statedata);
+			Pushie1.pushHistory({
+				data: statedata,
+				title: statedata.title,
+				href: event.target.href
+			});
 		});
 	return false;
 };
@@ -53,36 +57,15 @@ var initEvents = function () {
 	window.addEventListener('popstate', function (event) {
 		// var data = event.state;
 		reportEvent(event);
-		reportData(event.state || {
-			title: 'unknown',
-			url: 'unknown',
-			name: 'undefined',
-			location: 'undefined'
-		});
 	});
 
 	window.addEventListener('replacestate', function (event) {
 		// var data = event.state;
 		reportEvent(event);
-		reportData(event.state || {
-			title: 'unknown',
-			url: 'unknown',
-			name: 'undefined',
-			location: 'undefined'
-		});
 	});
 
 	window.addEventListener('hashchange', function (event) {
 		reportEvent(event);
-
-		// we won't do this for now - let's stay focused on states
-		/*
-		if (event.newURL) {
-		  urlhistory.innerHTML = event.oldURL;
-		} else {
-		  urlhistory.innerHTML = "no support for <code>event.newURL/oldURL</code>";
-		}
-		*/
 	});
 
 	window.addEventListener('pageshow', function (event) {
@@ -93,7 +76,7 @@ var initEvents = function () {
 		reportEvent(event);
 	});
 
-	window.history.replaceState(window.initialdata, window.initialdata.title, window.initialdata.url);
+	// window.history.replaceState(window.initialdata, window.initialdata.title, window.initialdata.url);
 };
 
 window.addEventListener('load', function () {
@@ -102,5 +85,11 @@ window.addEventListener('load', function () {
 	urlhistory = document.getElementById('urlhistory');
 	examples = document.querySelectorAll('#examples li a');
 	output = document.getElementById('output');
+	Pushie1 = new Pushie({
+		push_state_support: false,
+		pushcallback: statecallback,
+		popcallback: statecallback
+	});
 	initEvents();
+	window.Pushie1 = Pushie1;
 }, false);
