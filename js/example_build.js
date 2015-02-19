@@ -2486,7 +2486,29 @@ var request = require('superagent'),
 	examples,
 	output,
 	replaceHistoryButton,
-	template = 'title: <strong>{title}</strong>, URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>';
+	template = 'title: <strong>{title}</strong>, URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>',
+	mockdata = { // imagine these are ajax requests :)
+		first: {
+			title: 'first',
+			name: 'Remy',
+			location: 'Brighton, UK'
+		},
+		second: {
+			title: 'second',
+			name: 'John',
+			location: 'San Francisco, USA'
+		},
+		third: {
+			title: 'third',
+			name: 'Jeff',
+			location: 'Vancover, Canada'
+		},
+		fourth: {
+			title: 'fourth',
+			name: 'Simon',
+			location: 'London, UK'
+		}
+	};;
 
 var reportEvent = function (event) {
 	// console.log('event', event);
@@ -2509,7 +2531,14 @@ var linkClick = function (event) {
 			format: 'json'
 		})
 		.end(function (error, res) {
-			var statedata = JSON.parse(res.text);
+			var statedata;
+			if (error || res.status === 404 || res.statusType === 4) {
+				statedata = mockdata[event.target.innerHTML];
+			}
+			else {
+				statedata = JSON.parse(res.text);
+			}
+
 			Pushie1.pushHistory({
 				data: statedata,
 				title: statedata.title,
