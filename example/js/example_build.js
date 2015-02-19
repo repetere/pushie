@@ -35,36 +35,31 @@ var events = require('events'),
  * @copyright Copyright (c) 2014 Typesettin. All rights reserved.
  * @license MIT
  * @constructor pushie
- * @requires module:async
- * @requires module:classie
  * @requires module:events
- * @requires module:forbject
- * @requires module:querystring
- * @requires module:superagent
  * @requires module:util-extend
  * @requires module:util
  * @param {object} options configuration options
  * @example 
-		ajaxsubmitclassname: 'pushie',
-		ajaxsubmitfileuploadclassname: 'pushie-file',
-		ajaxformselector: '#pushie',
-		jsonp: false,
-		autosubmitselectors: '.autoFormSubmit',
-		autosubmitelements: [],
-		preventsubmitselectors: '.noFormSubmit',
-		preventsubmitelements: [],
-		headers: {},
-		queryparameters: {},
-		postdata: {},
-		beforesubmitcallback: null,
-		errorcallback: null,
-		successcallback: null
+		pushie_id: token(),
+		push_state_support: true,
+		replacecallback: function (data) {
+			console.log(data);
+		},
+		popcallback: function (data) {
+			console.log(data);
+		},
+		pushcallback: function (data) {
+			console.log(data);
+		}
  */
 var pushie = function (options) {
 	events.EventEmitter.call(this);
 	var defaultOptions = {
 		pushie_id: token(),
 		push_state_support: true,
+		replacecallback: function (data) {
+			console.log(data);
+		},
 		popcallback: function (data) {
 			console.log(data);
 		},
@@ -74,6 +69,7 @@ var pushie = function (options) {
 	};
 	this.options = extend(defaultOptions, options);
 	this.init = this.__init;
+	this.replaceHistory = this.__replaceHistory;
 	this.pushHistory = this.__pushHistory;
 	this.popHistory = this.__popHistory;
 	this.init();
@@ -82,6 +78,25 @@ var pushie = function (options) {
 
 util.inherits(pushie, events.EventEmitter);
 
+
+/**
+ * sets replace state
+ * @param {object} options data,title,href
+ * @emits replacehistory
+ */
+pushie.prototype.__replaceHistory = function (options) {
+	if (this.options.push_state_support) {
+		window.history.replaceState(options.data, options.title, options.href);
+	}
+	else {
+		var newURL = options.href;
+		newURL = (newURL.search(window.location.origin) >= 0) ? newURL.replace(window.location.origin, '') : newURL;
+		window.sessionStorage.setItem(this.options.pushie_id + newURL, JSON.stringify(options));
+		window.location.hash = newURL;
+	}
+	this.options.replacecallback(options.data);
+	this.emit('replacehistory', options);
+};
 
 /**
  * sets push state
@@ -93,9 +108,10 @@ pushie.prototype.__pushHistory = function (options) {
 		window.history.pushState(options.data, options.title, options.href);
 	}
 	else {
-		console.log('pushHistory options', options);
-		window.sessionStorage.setItem(this.options.pushie_id + options.href, JSON.stringify(options));
-		window.location.hash = options.href;
+		var newURL = options.href;
+		newURL = (newURL.search(window.location.origin) >= 0) ? newURL.replace(window.location.origin, '') : newURL;
+		window.sessionStorage.setItem(this.options.pushie_id + newURL, JSON.stringify(options));
+		window.location.hash = newURL;
 	}
 	this.options.pushcallback(options.data);
 	this.emit('pushhistory', options);
@@ -113,16 +129,23 @@ pushie.prototype.__popHistory = function (options) {
 	}
 	else {
 		popdata = JSON.parse(window.sessionStorage.getItem(this.options.pushie_id + options.href));
-		this.options.popcallback(popdata);
+		this.options.popcallback(popdata.data);
 	}
 	this.emit('pophistory', options);
 };
 
 /**
- * sets this.options.form, also adds event listener for pushie form [this.ajaxFormEventListers()], adds auto submit form listeners [this.submitOnChangeListeners()], and prevent submit listeners [this.preventEnterSubmitListeners()]
+ * sets detects support for history push/pop/replace state and can set initial data
  * @emits initialized
  */
 pushie.prototype.__init = function () {
+	if (typeof window.history.pushState === 'undefined') {
+		this.options.push_state_support = false;
+	}
+	else {
+		this.options.push_state_support = true;
+	}
+
 	if (this.options.push_state_support === false) {
 		window.addEventListener('hashchange', function () {
 			var newURL = window.location.hash.substr(1, window.location.hash.length);
@@ -140,17 +163,19 @@ pushie.prototype.__init = function () {
 			});
 		}.bind(this));
 
-		// window.addEventListener('replacestate', function (event) {
-		// 	// var data = event.state;
-		// 	reportEvent(event);
-		// 	reportData(event.state || {
-		// 		title: 'unknown',
-		// 		url: 'unknown',
-		// 		name: 'undefined',
-		// 		location: 'undefined'
-		// 	});
-		// });
-		window.history.replaceState(this.options.initialdata, this.options.initialtitle, window.location.href);
+		window.addEventListener('replacestate', function (event) {
+			this.replaceState({
+				data: event.state
+			});
+		}.bind(this));
+	}
+
+	if (this.options.initialdata && this.options.initialtitle && this.options.initialhref) {
+		this.replaceHistory({
+			data: this.options.initialdata,
+			title: this.options.initialtitle,
+			href: this.options.initialhref
+		});
 	}
 	this.emit('initialized');
 };
@@ -2460,10 +2485,11 @@ var request = require('superagent'),
 	urlhistory,
 	examples,
 	output,
+	replaceHistoryButton,
 	template = 'title: <strong>{title}</strong>, URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>';
 
 var reportEvent = function (event) {
-	console.log('event', event);
+	// console.log('event', event);
 	lastevent.innerHTML = event.type;
 };
 
@@ -2493,8 +2519,20 @@ var linkClick = function (event) {
 	return false;
 };
 
+var replaceHistoryEventClick = function () {
+	Pushie1.replaceHistory({
+		data: {
+			title: 'replaced third title',
+			name: 'replaced third name',
+			location: 'replaced location'
+		},
+		title: 'replaced third title',
+		href: '/history/third'
+	});
+};
+
 var initEvents = function () {
-	if (typeof window.history.pushState === 'undefined') {
+	if (!Pushie1.options.push_state_support) {
 		state.className = 'fail';
 	}
 	else {
@@ -2506,13 +2544,13 @@ var initEvents = function () {
 		examples[x].addEventListener('click', linkClick, false);
 	}
 
+	replaceHistoryButton.addEventListener('click', replaceHistoryEventClick, false);
+
 	window.addEventListener('popstate', function (event) {
-		// var data = event.state;
 		reportEvent(event);
 	});
 
 	window.addEventListener('replacestate', function (event) {
-		// var data = event.state;
 		reportEvent(event);
 	});
 
@@ -2537,10 +2575,18 @@ window.addEventListener('load', function () {
 	urlhistory = document.getElementById('urlhistory');
 	examples = document.querySelectorAll('#examples li a');
 	output = document.getElementById('output');
+	replaceHistoryButton = document.getElementById('replace-history');
 	Pushie1 = new Pushie({
-		push_state_support: false,
+		replacecallback: statecallback,
 		pushcallback: statecallback,
-		popcallback: statecallback
+		popcallback: statecallback,
+		// initialdata: {
+		// 	title: 'init title',
+		// 	name: 'init name',
+		// 	location: 'init location'
+		// },
+		// initialtitle: 'init title',
+		// initialhref: 'home'
 	});
 	initEvents();
 	window.Pushie1 = Pushie1;

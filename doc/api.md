@@ -4,14 +4,10 @@
 
 * [class: pushie](#pushie)
   * [new pushie(options)](#new_pushie)
-  * [pushie.__ajaxSubmitPushie(e, element)](#pushie#__ajaxSubmitPushie)
-  * [pushie.__submit()](#pushie#__submit)
-  * [pushie.__autoSubmitFormOnChange()](#pushie#__autoSubmitFormOnChange)
-  * [pushie.__submitOnChangeListeners()](#pushie#__submitOnChangeListeners)
-  * [pushie.__preventSubmitOnEnter(e)](#pushie#__preventSubmitOnEnter)
-  * [pushie.__preventEnterSubmitListeners()](#pushie#__preventEnterSubmitListeners)
-  * [pushie.__ajaxFormEventListers()](#pushie#__ajaxFormEventListers)
-  * [pushie._init()](#pushie#_init)
+  * [pushie.__replaceHistory(options)](#pushie#__replaceHistory)
+  * [pushie.__pushHistory(options)](#pushie#__pushHistory)
+  * [pushie.__popHistory(options)](#pushie#__popHistory)
+  * [pushie.__init()](#pushie#__init)
 
 <a name="new_pushie"></a>
 ##new pushie(options)
@@ -26,61 +22,43 @@ A module that represents a pushie object, a componentTab is a page composition t
 **Copyright**: Copyright (c) 2014 Typesettin. All rights reserved.  
 **Example**  
 
-		ajaxsubmitclassname: 'pushie',
-		ajaxsubmitfileuploadclassname: 'pushie-file',
-		ajaxformselector: '#pushie',
-		jsonp: false,
-		autosubmitselectors: '.autoFormSubmit',
-		autosubmitelements: [],
-		preventsubmitselectors: '.noFormSubmit',
-		preventsubmitelements: [],
-		headers: {},
-		queryparameters: {},
-		postdata: {},
-		beforesubmitcallback: null,
-		errorcallback: null,
-		successcallback: null
+		pushie_id: token(),
+		push_state_support: true,
+		replacecallback: function (data) {
+			console.log(data);
+		},
+		popcallback: function (data) {
+			console.log(data);
+		},
+		pushcallback: function (data) {
+			console.log(data);
+		}
 
-<a name="pushie#__ajaxSubmitPushie"></a>
-##pushie.__ajaxSubmitPushie(e, element)
-asynchronously submit from data, supports, POST, GET, and GET JSONP
+<a name="pushie#__replaceHistory"></a>
+##pushie.__replaceHistory(options)
+sets replace state
 
 **Params**
 
-- e `object` - form submit event  
-- element `object` - form html element  
+- options `object` - data,title,href  
 
-**Returns**: `function` - ajaxResponseHandler(error, response)  
-<a name="pushie#__submit"></a>
-##pushie.__submit()
-submit pushie via ajax
-
-<a name="pushie#__autoSubmitFormOnChange"></a>
-##pushie.__autoSubmitFormOnChange()
-submit current form if html element has ajaxsubmitclassname class
-
-<a name="pushie#__submitOnChangeListeners"></a>
-##pushie.__submitOnChangeListeners()
-add change listener for form elements with autosubmitselectors class
-
-<a name="pushie#__preventSubmitOnEnter"></a>
-##pushie.__preventSubmitOnEnter(e)
-prevent element from submitting form when pressing enter key
+<a name="pushie#__pushHistory"></a>
+##pushie.__pushHistory(options)
+sets push state
 
 **Params**
 
-- e `object` - keypress event  
+- options `object` - data,title,href  
 
-**Returns**: `boolean` - also e.preventDefault();  
-<a name="pushie#__preventEnterSubmitListeners"></a>
-##pushie.__preventEnterSubmitListeners()
-add keypress listeners to form elements that have preventsubmitselectors class to prevent submitting form on enter key
+<a name="pushie#__popHistory"></a>
+##pushie.__popHistory(options)
+restores pop state
 
-<a name="pushie#__ajaxFormEventListers"></a>
-##pushie.__ajaxFormEventListers()
-add submit event listener to pushie form
+**Params**
 
-<a name="pushie#_init"></a>
-##pushie._init()
-sets this.options.form, also adds event listener for pushie form [this.ajaxFormEventListers()], adds auto submit form listeners [this.submitOnChangeListeners()], and prevent submit listeners [this.preventEnterSubmitListeners()]
+- options `object` - data,title,href  
+
+<a name="pushie#__init"></a>
+##pushie.__init()
+sets detects support for history push/pop/replace state and can set initial data
 

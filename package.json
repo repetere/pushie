@@ -1,8 +1,8 @@
 {
-  "title": "pushie - CommonJS/Browserified ajax form submission",
+  "title": "pushie - CommonJS/Browserified browser history api wrapper",
   "name": "pushie",
-  "description": "Pushie submits form data via AJAX. Pushie supports JSONP, GET, POST, DELETE and multipart/form-data file Uploads without the baggage of a full framework.",
-  "version": "1.0.0",
+  "description": "Pushie is a browser history api wrapper, with fallback support to use URL hashes.",
+  "version": "1.0.1",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
@@ -15,11 +15,6 @@
     "url": "git@github.com:yawetse/pushie.git"
   },
   "dependencies": {
-    "async": ">=0.9.0",
-    "classie": ">=0.1.0",
-    "stylie": "~1.3.0",
-    "forbject": ">=1.0.0",
-    "superagent": ">=0.18.0",
     "util-extend": ">=1.0.1"
   },
   "devDependencies": {
@@ -44,18 +39,16 @@
     "grunt-simple-mocha": ">=0.4.0",
     "jsdoc": "3.3.0-alpha10",
     "mocha": "2.0.1",
+    "superagent": ">=0.18.0",
     "uglify-js": "^2.4.15",
     "uglifyify": "^2.5.0"
   },
   "keywords": [
-    "knockout",
-    "data binding",
-    "ui binding",
-    "jsonp",
-    "ajax",
-    "form",
-    "form data",
-    "multipart",
+    "popstate",
+    "pushstate",
+    "browser history",
+    "html5",
+    "javascript history",
     "FormData"
   ]
 }

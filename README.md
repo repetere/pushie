@@ -3,7 +3,7 @@
 
 ** CommonJS/Browserified ajax form submission **
 
-Pushie submits form data via AJAX. Pushie supports JSONP, GET, POST, DELETE and multipart/form-data file Uploads without the baggage of a full framework. 
+Pushie is a browser history api wrapper, with fallback support to use URL hashes. 
 
 [API Documenation](https://yawetse.github.io/pushie/api/html/index.html)
 
@@ -24,16 +24,30 @@ Pushie is a browserified/commonjs javascript module.
 *JavaScript*
 ```javascript
 var Pushie = require('pushie'),
-	myPushie;
+	myPushie,
+	uiButton;
 
 //initialize nav component after the dom has loaded
 window.addEventListener('load',function(){
 	myPushie = new Pushie({
-    ajaxformselector: '#pushie',
-    headers: {'customheader':'customvalue'},
-    beforesubmitcallback: function(event,formelement){console.log(event,formelement)},
-    successcallback: function(response){console.log(response)},
-    errorcallback: function(error,response){console.log(error,response)}
+    replacecallback: function(data){console.log(data)},
+    pushcallback: function(data){console.log(data)},
+    popcallback: function(data){console.log(data)}
+  });
+  uiButton = document.querySelector('#uiButton');
+  uiButton.addEventListener('click',function(event){
+  	event.preventDefault();
+  	//normally you would do this after you queried for some data
+  	myPushie.pushHistory({
+			data: {
+				title: 'some',
+				name: 'sample',
+				location: 'data you want to save'
+			},
+			title: 'some sample title',
+			href: event.target.href
+		});
+  	return false;
   });
 	//expose your nav component to the window global namespace
 	window.myPushie = myPushie;
@@ -48,19 +62,9 @@ window.addEventListener('load',function(){
   	<script src='[path/to/browserify/bundle].js'></script>
 	</head>
 	<body>
-		<form method="get" action="" id="pushie">
-	    <section>
-	      <label for="field1">Field 1</label>
-	      <input type="text" value="" name="field1" id="field1" />
-	    </section>
-	    <section>
-	      <label for="field2">Field 2</label>
-	      <input type="text" value="" name="field2" id="field2" />
-	    </section>
-	    <section>
-	      <input type="submit" value="ajax submit" name="submitbutton" />
-	    </section>
-		</form>
+		<p>
+			<a href="/newhistory/javascripthref" id="uiButton">replace third history</a>
+		</p>
 	</body>
 </html>
 ```
@@ -68,20 +72,16 @@ window.addEventListener('load',function(){
 ##OPTIONS
 ```javascript
 defaultOptions = {
-	ajaxsubmitfileuploadclassname: 'pushie-file', //file input class to readAsDataURL
-	ajaxformselector: '#pushie', //pushie form selector
-	ajaxsubmitform: null,
-	jsonp: false, //retrieves data via JSONP, form data must contain a 'callback' parameter
-	autosubmitselectors: '.autoFormSubmit',
-	autosubmitelements: [],
-	preventsubmitselectors: '.noFormSubmit',
-	preventsubmitelements: [],
-	headers: {}, // custom headers to submit
-	queryparameters: {}, // programmitcally add more get data
-	postdata: {}, // programmitcally add more post data
-	beforesubmitcallback: null, // callback(event,formelement)  
-	errorcallback: null, // callback(error,response)
-	successcallback: null // callback(response)
+	push_state_support: true,
+	replacecallback: function (data) {
+		console.log(data);
+	},
+	popcallback: function (data) {
+		console.log(data);
+	},
+	pushcallback: function (data) {
+		console.log(data);
+	}
 };
 ```
 
@@ -89,13 +89,15 @@ defaultOptions = {
 
 ```javascript
 //submit pushie via ajax
-myPushie.submit(); 
+myPushie.replaceHistory(options);  // options.data, options.title, options.href
+myPushie.pushHistory(options); // options.data, options.title, options.href
+myPushie.popHistory(options); // if no window.history.pushState then supply options.href
 
 //events
-myPushie.on('autosubmitelement',callback); // callback(formelement)
-myPushie.on('prevententer',callback); // callback(eventTarget)
-myPushie.on('initialized',callback); // callback()
-myPushie.on('submitted',callback); // callback(pushieData)
+myPushie.on('initialized'); // callback()
+myPushie.on('pushhistory',callback); // callback(data)
+myPushie.on('replacehistory',callback); // callback(data)
+myPushie.on('pophistory',callback); // callback(data)
 ```
 ##Development
 *Make sure you have grunt installed*

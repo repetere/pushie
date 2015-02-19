@@ -8,10 +8,11 @@ var request = require('superagent'),
 	urlhistory,
 	examples,
 	output,
+	replaceHistoryButton,
 	template = 'title: <strong>{title}</strong>, URL: <strong>{url}</strong>, name: <strong>{name}</strong>, location: <strong>{location}</strong>';
 
 var reportEvent = function (event) {
-	console.log('event', event);
+	// console.log('event', event);
 	lastevent.innerHTML = event.type;
 };
 
@@ -41,8 +42,20 @@ var linkClick = function (event) {
 	return false;
 };
 
+var replaceHistoryEventClick = function () {
+	Pushie1.replaceHistory({
+		data: {
+			title: 'replaced third title',
+			name: 'replaced third name',
+			location: 'replaced location'
+		},
+		title: 'replaced third title',
+		href: '/history/third'
+	});
+};
+
 var initEvents = function () {
-	if (typeof window.history.pushState === 'undefined') {
+	if (!Pushie1.options.push_state_support) {
 		state.className = 'fail';
 	}
 	else {
@@ -54,13 +67,13 @@ var initEvents = function () {
 		examples[x].addEventListener('click', linkClick, false);
 	}
 
+	replaceHistoryButton.addEventListener('click', replaceHistoryEventClick, false);
+
 	window.addEventListener('popstate', function (event) {
-		// var data = event.state;
 		reportEvent(event);
 	});
 
 	window.addEventListener('replacestate', function (event) {
-		// var data = event.state;
 		reportEvent(event);
 	});
 
@@ -85,10 +98,18 @@ window.addEventListener('load', function () {
 	urlhistory = document.getElementById('urlhistory');
 	examples = document.querySelectorAll('#examples li a');
 	output = document.getElementById('output');
+	replaceHistoryButton = document.getElementById('replace-history');
 	Pushie1 = new Pushie({
-		push_state_support: false,
+		replacecallback: statecallback,
 		pushcallback: statecallback,
-		popcallback: statecallback
+		popcallback: statecallback,
+		// initialdata: {
+		// 	title: 'init title',
+		// 	name: 'init name',
+		// 	location: 'init location'
+		// },
+		// initialtitle: 'init title',
+		// initialhref: 'home'
 	});
 	initEvents();
 	window.Pushie1 = Pushie1;
