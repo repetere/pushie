@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pushie by typesettin</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Pushie</h1>
+        <p>html5 push state</p>
+
+        <p class="view"><a href="https://github.com/typesettin/pushie">View the Project on GitHub <small>typesettin/pushie</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/typesettin/pushie/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/typesettin/pushie/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/typesettin/pushie">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="pushie--" class="anchor" href="#pushie--" aria-hidden="true"><span class="octicon octicon-link"></span></a>pushie  <a href="http://badge.fury.io/js/pushie"><img src="https://badge.fury.io/js/pushie.svg" alt="NPM version"></a>
+</h1>
+
+<p>** CommonJS/Browserified ajax form submission **</p>
+
+<p>Pushie is a browser history api wrapper, with fallback support to use URL hashes. </p>
+
+<p><a href="https://yawetse.github.io/pushie/api/html/index.html">API Documenation</a></p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p>Check out <code>example/index.html</code>, the example javascript for the example page is <code>resources/js/example_src.js</code></p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>$ npm install pushie
+</code></pre>
+
+<p>Pushie is a browserified/commonjs javascript module.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p><em>JavaScript</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> Pushie <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>pushie<span class="pl-pds">'</span></span>),
+    myPushie,
+    uiButton;
+
+<span class="pl-c">//initialize nav component after the dom has loaded</span>
+<span class="pl-s3">window</span>.addEventListener(<span class="pl-s1"><span class="pl-pds">'</span>load<span class="pl-pds">'</span></span>,<span class="pl-st">function</span>(){
+    myPushie <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Pushie</span>({
+    <span class="pl-en">replacecallback</span>: <span class="pl-st">function</span>(<span class="pl-vpf">data</span>){<span class="pl-en">console</span><span class="pl-s3">.log</span>(data)},
+    <span class="pl-en">pushcallback</span>: <span class="pl-st">function</span>(<span class="pl-vpf">data</span>){<span class="pl-en">console</span><span class="pl-s3">.log</span>(data)},
+    <span class="pl-en">popcallback</span>: <span class="pl-st">function</span>(<span class="pl-vpf">data</span>){<span class="pl-en">console</span><span class="pl-s3">.log</span>(data)}
+  });
+  uiButton <span class="pl-k">=</span> <span class="pl-s3">document</span>.querySelector(<span class="pl-s1"><span class="pl-pds">'</span>#uiButton<span class="pl-pds">'</span></span>);
+  uiButton.addEventListener(<span class="pl-s1"><span class="pl-pds">'</span>click<span class="pl-pds">'</span></span>,<span class="pl-st">function</span>(<span class="pl-vpf">event</span>){
+    <span class="pl-s3">event</span>.preventDefault();
+    <span class="pl-c">//normally you would do this after you queried for some data</span>
+    myPushie.pushHistory({
+            data<span class="pl-k">:</span> {
+                title<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>some<span class="pl-pds">'</span></span>,
+                name<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>sample<span class="pl-pds">'</span></span>,
+                location<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>data you want to save<span class="pl-pds">'</span></span>
+            },
+            title<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>some sample title<span class="pl-pds">'</span></span>,
+            href<span class="pl-k">:</span> <span class="pl-s3">event</span>.<span class="pl-sc">target</span>.<span class="pl-sc">href</span>
+        });
+    <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+  });
+    <span class="pl-c">//expose your nav component to the window global namespace</span>
+    <span class="pl-s3">window</span>.myPushie <span class="pl-k">=</span> myPushie;
+});</pre></div>
+
+<p><em>HTML</em></p>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">html</span>&gt;
+    &lt;<span class="pl-ent">head</span>&gt;
+    &lt;<span class="pl-ent">title</span>&gt;Your Page&lt;/<span class="pl-ent">title</span>&gt;
+<span class="pl-s2">    &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s1"><span class="pl-pds">'</span>[path/to/browserify/bundle].js<span class="pl-pds">'</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span>
+    &lt;/<span class="pl-ent">head</span>&gt;
+    &lt;<span class="pl-ent">body</span>&gt;
+        &lt;<span class="pl-ent">p</span>&gt;
+            &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>/newhistory/javascripthref<span class="pl-pds">"</span></span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>uiButton<span class="pl-pds">"</span></span>&gt;replace third history&lt;/<span class="pl-ent">a</span>&gt;
+        &lt;/<span class="pl-ent">p</span>&gt;
+    &lt;/<span class="pl-ent">body</span>&gt;
+&lt;/<span class="pl-ent">html</span>&gt;</pre></div>
+
+<h2>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>OPTIONS</h2>
+
+<div class="highlight highlight-javascript"><pre>defaultOptions <span class="pl-k">=</span> {
+    push_state_support<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    <span class="pl-en">replacecallback</span>: <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+    },
+    <span class="pl-en">popcallback</span>: <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+    },
+    <span class="pl-en">pushcallback</span>: <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+        <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+    }
+};</pre></div>
+
+<h2>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">//submit pushie via ajax</span>
+myPushie.replaceHistory(options);  <span class="pl-c">// options.data, options.title, options.href</span>
+myPushie.pushHistory(options); <span class="pl-c">// options.data, options.title, options.href</span>
+myPushie.popHistory(options); <span class="pl-c">// if no window.history.pushState then supply options.href</span>
+
+<span class="pl-c">//events</span>
+myPushie.on(<span class="pl-s1"><span class="pl-pds">'</span>initialized<span class="pl-pds">'</span></span>); <span class="pl-c">// callback()</span>
+myPushie.on(<span class="pl-s1"><span class="pl-pds">'</span>pushhistory<span class="pl-pds">'</span></span>,callback); <span class="pl-c">// callback(data)</span>
+myPushie.on(<span class="pl-s1"><span class="pl-pds">'</span>replacehistory<span class="pl-pds">'</span></span>,callback); <span class="pl-c">// callback(data)</span>
+myPushie.on(<span class="pl-s1"><span class="pl-pds">'</span>pophistory<span class="pl-pds">'</span></span>,callback); <span class="pl-c">// callback(data)</span></pre></div>
+
+<h2>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h2>
+
+<p><em>Make sure you have grunt installed</em></p>
+
+<pre><code>$ npm install -g grunt-cli
+</code></pre>
+
+<p>Then run grunt watch</p>
+
+<pre><code>$ grunt watch #uses grunt-connect on port 8181 
+</code></pre>
+
+<h2>
+<a id="for-generating-documentation" class="anchor" href="#for-generating-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>For generating documentation</h2>
+
+<pre><code>$ grunt doc
+$ jsdoc2md lib/**/*.js index.js &gt; doc/api.md
+</code></pre>
+
+<h2>
+<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h2>
+
+<ul>
+<li>The Pushie uses Node's event Emitter for event handling.</li>
+<li>In order to test post submission, grunt connect is used on port 8181</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/typesettin">typesettin</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
